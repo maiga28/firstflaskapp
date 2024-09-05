@@ -15,6 +15,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
 
+
 # Enregistrement des blueprints
 app.register_blueprint(posts_router, url_prefix='/posts')
 app.register_blueprint(users_router, url_prefix='/users')
