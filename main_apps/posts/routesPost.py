@@ -7,7 +7,7 @@ posts = Blueprint('posts', __name__)
 # Route pour afficher tous les posts
 @posts.route("/")
 @posts.route("/posts")
-def all_posts():
+def all_posts(): 
     posts_list = Post.query.all()
     return render_template('posts/posts.html', posts=posts_list)
 

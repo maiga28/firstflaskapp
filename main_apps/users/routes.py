@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from main_apps.users.user_models import User
+from main_apps.users.models import User
 from main_apps.extensions import db
 from flask_wtf import FlaskForm
 from wtforms import HiddenField
@@ -17,19 +17,19 @@ def all_users():
 
 @users.route("/create", methods=['GET', 'POST'])
 def create_user():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
+    if request.method != 'POST':
+        return render_template('users/create_user.html')
 
-        # Créez un utilisateur sans `image_file` et `posts`
-        new_user = User(username=username, email=email, password=password)
-        db.session.add(new_user)
-        db.session.commit()
+    username = request.form['username']
+    email = request.form['email']
+    password = request.form['password']
 
-        return redirect(url_for('users.all_users'))
+    new_user = User(username=username, email=email, password=password)
+    db.session.add(new_user)
+    db.session.commit()
 
-    return render_template('users/create_user.html')
+    return redirect(url_for('users.all_users'))
+
 
 @users.route("/users/<int:id>/update", methods=['GET', 'POST'])
 def update_user(id):
@@ -38,7 +38,7 @@ def update_user(id):
     if request.method == 'POST':
         user.username = request.form['username']
         user.email = request.form['email']
-        user.password = request.form['password']  # Assurez-vous de hacher le mot de passe avant de le stocker
+        user.password = request.form['password']  
         db.session.commit()
         return redirect(url_for('users.all_users'))
 
@@ -46,7 +46,7 @@ def update_user(id):
 
 
 class DeleteForm(FlaskForm):
-    hidden_tag = HiddenField()  # Exemple de champ caché
+    hidden_tag = HiddenField() 
 
 @users.route("/users/<int:id>/delete", methods=['POST'])
 def delete_user(id):
